@@ -39,7 +39,7 @@ func CreateCourse(w http.ResponseWriter, r *http.Request) {
 	course.UserID = userID
 
 	_, err = database.DB.Exec(
-		"INSERT INTO course(user_id, course_name)VALUES(? , ?)",
+		"INSERT INTO courses(user_id, course_name)VALUES(? , ?)",
 		course.UserID,
 		course.CourseName,
 	)
@@ -59,4 +59,28 @@ func CreateCourse(w http.ResponseWriter, r *http.Request) {
 		nil,
 	)
 
+}
+
+func GetCourses(w http.ResponseWriter, r *http.Request) {
+
+	userID, ok := r.Context().Value("userID").(int)
+
+	if !ok {
+		utils.SendError(w, http.StatusUnauthorized, "Invalid user")
+		return
+	}
+
+	var courses []models.Course
+
+	rows, err := database.DB.Query(
+		"SELECT id, user_id, course_name, created_at FROM courses WHERE user_id = ?",
+		userID,
+	)
+
+	if err != nil {
+		utils.SendError(w, http.StatusInternalServerError, "Database error")
+		return
+	}
+
+	defer rows.Close()
 }
