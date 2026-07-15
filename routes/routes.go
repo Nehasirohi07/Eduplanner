@@ -21,6 +21,15 @@ func RegisterRoutes() *mux.Router {
 		middleware.Auth(http.HandlerFunc(handlers.CreateCourse)),
 	).Methods("POST")
 
+	router.Handle(
+		"/courses/{id}/subjects",
+		middleware.Auth(http.HandlerFunc(handlers.CreateSubject)),
+	).Methods("POST")
+
+	router.Handle(
+		"/courses/{id}/subjects",
+		middleware.Auth(http.HandlerFunc(handlers.GetSubjects)),
+	).Methods("GET")
 	return router
 
 }
