@@ -83,4 +83,41 @@ func GetCourses(w http.ResponseWriter, r *http.Request) {
 	}
 
 	defer rows.Close()
+
+	for rows.Next() {
+		var course models.Course
+
+		err = rows.Scan(
+			&course.ID,
+			&course.UserID,
+			&course.CourseName,
+			&course.CreatedAt,
+		)
+
+		if err != nil {
+			utils.SendError(
+				w,
+				http.StatusInternalServerError,
+				"Database error",
+			)
+			return
+		}
+
+		courses = append(courses, course)
+
+	}
+	if err = rows.Err(); err != nil {
+		utils.SendError(
+			w,
+			http.StatusInternalServerError,
+			"Database error",
+		)
+		return
+	}
+	utils.SendSuccess(
+		w,
+		http.StatusOK,
+		"Courses fetched successfully",
+		courses,
+	)
 }
