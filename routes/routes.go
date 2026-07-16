@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
+	httpSwagger "github.com/swaggo/http-swagger"
 )
 
 func RegisterRoutes() *mux.Router {
@@ -37,14 +38,18 @@ func RegisterRoutes() *mux.Router {
 	).Methods("POST")
 
 	router.Handle(
-		"/students/{id}/goals",
+		"/subjects/{id}/goals",
 		middleware.Auth(http.HandlerFunc(handlers.GetStudyGoals)),
 	).Methods("GET")
 
 	router.Handle(
-		"/Dashboard",
+		"/dashboard",
 		middleware.Auth(http.HandlerFunc(handlers.GetDashboard)),
 	).Methods("GET")
+
+	router.PathPrefix("/swagger/").Handler(
+		httpSwagger.WrapHandler,
+	)
 
 	return router
 }

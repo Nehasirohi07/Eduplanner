@@ -6,8 +6,15 @@ import (
 
 	"eduplanner/config"
 	"eduplanner/database"
+	_ "eduplanner/docs"
 	"eduplanner/routes"
 )
+
+//@title eduPlanner API
+//@version 1.0
+//@description Backend API for EduPlanner
+//@host localhost:5050
+//@BasePath /
 
 func main() {
 	config.LoadEnv()

@@ -1,0 +1,9 @@
+basePath: /
+host: localhost:5050
+info:
+  contact: {}
+  description: Backend API for EduPlanner
+  title: eduPlanner API
+  version: "1.0"
+paths: {}
+swagger: "2.0"
