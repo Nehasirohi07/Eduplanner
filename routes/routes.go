@@ -38,7 +38,7 @@ func RegisterRoutes() *mux.Router {
 
 	router.Handle(
 		"/students/{id}/goals",
-		middleware.Auth(http.HandlerFunc(handlers.GetStudyGoal)),
+		middleware.Auth(http.HandlerFunc(handlers.GetStudyGoals)),
 	).Methods("GET")
 	return router
 

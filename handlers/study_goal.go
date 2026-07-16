@@ -121,3 +121,130 @@ func CreateStudyGoal(w http.ResponseWriter, r *http.Request) {
 	)
 
 }
+
+func GetStudyGoals(w http.ResponseWriter, r *http.Request) {
+
+	userID, ok := r.Context().Value("userID").(int)
+
+	if !ok {
+		utils.SendError(
+			w,
+			http.StatusUnauthorized,
+			"Invalid user",
+		)
+		return
+	}
+
+	vars := mux.Vars(r)
+
+	subjectID := vars["id"]
+
+	subjectIDInt, err := strconv.Atoi(subjectID)
+
+	if err != nil {
+		utils.SendError(
+			w,
+			http.StatusBadRequest,
+			"Invalid subject ID",
+		)
+		return
+	}
+
+	var subjectExists int
+
+	err = database.DB.QueryRow(
+		`SELECT subject.id
+		FROM subjects
+		JOIN courses
+		ON subjects.course_id = courses.id
+		WHERE subjects.id = ?
+		AND courses.user_id = ?`,
+		subjectIDInt,
+		userID,
+	).Scan(&subjectExists)
+
+	if err == sql.ErrNoRows {
+		utils.SendError(
+			w,
+			http.StatusForbidden,
+			"Subject not found or access denied",
+		)
+		return
+	}
+
+	if err != nil {
+		utils.SendError(
+			w,
+			http.StatusInternalServerError,
+			"Database error",
+		)
+		return
+	}
+
+	rows, err := database.DB.Query(
+		`SELECT
+		id,
+		subject_id,
+		target_minutes,
+		deadline,
+		status,
+		created_id
+		FROM study_goals
+		WHERE subject_id = ?`,
+		subjectIDInt,
+	)
+
+	if err != nil {
+		utils.SendError(
+			w,
+			http.StatusInternalServerError,
+			"Database error",
+		)
+		return
+	}
+
+	defer rows.Close()
+
+	var studyGoals []models.StudyGoal
+
+	for rows.Next() {
+		var studyGoal models.StudyGoal
+
+		err = rows.Scan(
+			&studyGoal.ID,
+			&studyGoal.SubjectID,
+			&studyGoal.TargetMinutes,
+			&studyGoal.Deadline,
+			&studyGoal.Status,
+			&studyGoal.CreatedAt,
+		)
+
+		if err != nil {
+			utils.SendError(
+				w,
+				http.StatusInternalServerError,
+				"Database error",
+			)
+			return
+		}
+
+		studyGoals = append(studyGoals, studyGoal)
+
+		if err = rows.Err(); err != nil {
+			utils.SendError(
+				w,
+				http.StatusInternalServerError,
+				"Database error",
+			)
+			return
+		}
+	}
+
+	utils.SendSuccess(
+		w,
+		http.StatusOK,
+		"Study goals fetched successfully",
+		studyGoals,
+	)
+
+}
