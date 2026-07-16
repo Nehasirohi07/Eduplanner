@@ -11,7 +11,7 @@ import (
 	"github.com/gorilla/mux"
 )
 
-func GetSubject(w http.ResponseWriter, r *http.Request) {
+func GetSubjects(w http.ResponseWriter, r *http.Request) {
 
 	userID, ok := r.Context().Value("userID").(int)
 
