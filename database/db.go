@@ -117,7 +117,7 @@ created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 CREATE TABLE IF NOT EXISTS study_goals(
 id INT AUTO_INCREMENT PRIMARY KEY,
 subject_id INT NOT NULL,
-FOREIGN KEY(subject_id) REFERENCES subjects(id)
+FOREIGN KEY(subject_id) REFERENCES subjects(id),
 target_minutes INT NOT NULL,
 deadline DATE NOT NULL,
 status VARCHAR(20) NOT NULL,
