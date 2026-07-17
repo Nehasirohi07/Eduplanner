@@ -12,6 +12,21 @@ import (
 	"github.com/gorilla/mux"
 )
 
+// CreateSubject godoc
+// @Summary Create a subject
+// @Description add a new subject to a course
+// @Tags subjects
+// @Accept json
+// @Produce json
+// @Security BearerAuth
+// @Param id path int true "Course ID"
+// @Param subject body models.Subject true "Subject Details"
+// @Success 201 {object} utils.Response
+// @Failure 400 {object} utils.Response
+// @Failure 401 {object} utils.Response
+// @Failure 500 {object} utils.Response
+// @Router /courses/{id}/subjects [post]
+
 func CreateSubject(w http.ResponseWriter, r *http.Request) {
 
 	var subject models.Subject

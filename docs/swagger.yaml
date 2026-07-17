@@ -27,6 +27,19 @@ definitions:
       password:
         type: string
     type: object
+  models.Subject:
+    properties:
+      course_id:
+        type: integer
+      created_at:
+        type: string
+      daily_target_minutes:
+        type: integer
+      id:
+        type: integer
+      subject_name:
+        type: string
+    type: object
   utils.Response:
     properties:
       data: {}
@@ -100,6 +113,77 @@ paths:
       summary: Create a new course
       tags:
       - Courses
+  /courses/{id}/subjects:
+    get:
+      consumes:
+      - application/json
+      description: Get all subjects of a course
+      parameters:
+      - description: Course ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/utils.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/utils.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.Response'
+      security:
+      - BearerAuth: []
+      summary: Get all subjects
+      tags:
+      - Subjects
+    post:
+      consumes:
+      - application/json
+      description: add a new subject to a course
+      parameters:
+      - description: Course ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Subject Details
+        in: body
+        name: subject
+        required: true
+        schema:
+          $ref: '#/definitions/models.Subject'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/utils.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/utils.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.Response'
+      security:
+      - BearerAuth: []
+      summary: Create a subject
+      tags:
+      - subjects
   /login:
     post:
       consumes:

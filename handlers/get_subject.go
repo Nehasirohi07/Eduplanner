@@ -11,6 +11,19 @@ import (
 	"github.com/gorilla/mux"
 )
 
+// GetSubjects godoc
+// @Summary Get all subjects
+// @Description Get all subjects of a course
+// @Tags Subjects
+// @Accept json
+// @Produce json
+// @Security BearerAuth
+// @Param id path int true "Course ID"
+// @Success 200 {object} utils.Response
+// @Failure 401 {object} utils.Response
+// @Failure 500 {object} utils.Response
+// @Router /courses/{id}/subjects [get]
+
 func GetSubjects(w http.ResponseWriter, r *http.Request) {
 
 	userID, ok := r.Context().Value("userID").(int)
