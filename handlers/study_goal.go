@@ -137,6 +137,19 @@ func CreateStudyGoal(w http.ResponseWriter, r *http.Request) {
 
 }
 
+// GetStudyGoals godoc
+// @Summary Get study goals
+// @Description Get all study goals of a subject
+// @Tags Study Goals
+// @Accept json
+// @Produce json
+// @Security BearerAuth
+// @Param id path int true "Subject ID"
+// @Success 200 {object} utils.Response
+// @Failure 401 {object} utils.Response
+// @Failure 500 {object} utils.Response
+// @Router /subjects/{id}/goals [get]
+
 func GetStudyGoals(w http.ResponseWriter, r *http.Request) {
 
 	userID, ok := r.Context().Value("userID").(int)

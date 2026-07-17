@@ -308,6 +308,37 @@ paths:
       summary: Create study goal
       tags:
       - Study Goals
+  /subjects/{id}/goals:
+    get:
+      consumes:
+      - application/json
+      description: Get all study goals of a subject
+      parameters:
+      - description: Subject ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/utils.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/utils.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.Response'
+      security:
+      - BearerAuth: []
+      summary: Get study goals
+      tags:
+      - Study Goals
 securityDefinitions:
   BearerAuth:
     in: header
