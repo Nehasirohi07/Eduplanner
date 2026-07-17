@@ -27,6 +27,21 @@ definitions:
       password:
         type: string
     type: object
+  models.StudyGoal:
+    properties:
+      created_at:
+        type: string
+      deadline:
+        type: string
+      id:
+        type: integer
+      status:
+        type: string
+      subject_id:
+        type: integer
+      target_minutes:
+        type: integer
+    type: object
   models.Subject:
     properties:
       course_id:
@@ -252,6 +267,47 @@ paths:
       summary: Register a new user
       tags:
       - Authentication
+  /students/{id}/goals:
+    post:
+      consumes:
+      - application/json
+      description: Create a study goal for a student
+      parameters:
+      - description: Student ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Study Goal
+        in: body
+        name: goal
+        required: true
+        schema:
+          $ref: '#/definitions/models.StudyGoal'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/utils.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/utils.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.Response'
+      security:
+      - BearerAuth: []
+      summary: Create study goal
+      tags:
+      - Study Goals
 securityDefinitions:
   BearerAuth:
     in: header

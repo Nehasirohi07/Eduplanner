@@ -12,6 +12,21 @@ import (
 	"github.com/gorilla/mux"
 )
 
+// CreateStudyGoal godoc
+// @Summary Create study goal
+// @Description Create a study goal for a student
+// @Tags Study Goals
+// @Accept json
+// @Produce json
+// @Security BearerAuth
+// @Param id path int true "Student ID"
+// @Param goal body models.StudyGoal true "Study Goal"
+// @Success 201 {object} utils.Response
+// @Failure 400 {object} utils.Response
+// @Failure 401 {object} utils.Response
+// @Failure 500 {object} utils.Response
+// @Router /students/{id}/goals [post]
+
 func CreateStudyGoal(w http.ResponseWriter, r *http.Request) {
 
 	var studyGoal models.StudyGoal
