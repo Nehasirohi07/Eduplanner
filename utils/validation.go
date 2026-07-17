@@ -78,11 +78,11 @@ func ValidateStudyGoal(studyGoal models.StudyGoal) error {
 		return errors.New("Deadline is required")
 	}
 
-	if studyGoal.Status != "Pending" &&
+	if studyGoal.Status != "pending" &&
 		studyGoal.Status != "in_progress" &&
-		studyGoal.Status != "complete" {
+		studyGoal.Status != "completed" {
 
-		return errors.New("Invalid status")
+		return errors.New("Status must be pending, in_progress or completed")
 	}
 
 	return nil

@@ -103,7 +103,7 @@ func GetCourses(w http.ResponseWriter, r *http.Request) {
 	)
 
 	if err != nil {
-		utils.SendError(w, http.StatusInternalServerError, "Database error")
+		utils.SendError(w, http.StatusInternalServerError, err.Error())
 		return
 	}
 
@@ -123,7 +123,7 @@ func GetCourses(w http.ResponseWriter, r *http.Request) {
 			utils.SendError(
 				w,
 				http.StatusInternalServerError,
-				"Database error",
+				err.Error(),
 			)
 			return
 		}
@@ -135,7 +135,7 @@ func GetCourses(w http.ResponseWriter, r *http.Request) {
 		utils.SendError(
 			w,
 			http.StatusInternalServerError,
-			"Database error",
+			err.Error(),
 		)
 		return
 	}

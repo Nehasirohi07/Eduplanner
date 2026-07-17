@@ -35,22 +35,20 @@ func GetDashboard(w http.ResponseWriter, r *http.Request) {
 
 	var dashboard models.Dashboard
 
+	// Total Courses
 	err := database.DB.QueryRow(
 		`SELECT COUNT(*)
-		FROM courses 
+		FROM courses
 		WHERE user_id = ?`,
 		userID,
 	).Scan(&dashboard.TotalCourses)
 
 	if err != nil {
-		utils.SendError(
-			w,
-			http.StatusInternalServerError,
-			"Database error",
-		)
+		utils.SendError(w, http.StatusInternalServerError, err.Error())
 		return
 	}
 
+	// Total Subjects
 	err = database.DB.QueryRow(
 		`SELECT COUNT(*)
 		FROM subjects
@@ -61,19 +59,16 @@ func GetDashboard(w http.ResponseWriter, r *http.Request) {
 	).Scan(&dashboard.TotalSubjects)
 
 	if err != nil {
-		utils.SendError(
-			w,
-			http.StatusInternalServerError,
-			"Database error",
-		)
+		utils.SendError(w, http.StatusInternalServerError, err.Error())
 		return
 	}
 
+	// Completed Goals
 	err = database.DB.QueryRow(
 		`SELECT COUNT(*)
 		FROM study_goals
 		JOIN subjects
-		ON study_goals.subjects_id = subjects.id
+		ON study_goals.subject_id = subjects.id
 		JOIN courses
 		ON subjects.course_id = courses.id
 		WHERE courses.user_id = ?
@@ -82,37 +77,31 @@ func GetDashboard(w http.ResponseWriter, r *http.Request) {
 	).Scan(&dashboard.CompletedGoals)
 
 	if err != nil {
-		utils.SendError(
-			w,
-			http.StatusInternalServerError,
-			"Database error",
-		)
+		utils.SendError(w, http.StatusInternalServerError, err.Error())
 		return
 	}
 
+	// Pending Goals
 	err = database.DB.QueryRow(
 		`SELECT COUNT(*)
 		FROM study_goals
 		JOIN subjects
-		ON study_goals.subjects_id = subjects.id
+		ON study_goals.subject_id = subjects.id
 		JOIN courses
-		ON subjects.courses_id = courses.id
+		ON subjects.course_id = courses.id
 		WHERE courses.user_id = ?
 		AND study_goals.status = 'pending'`,
 		userID,
 	).Scan(&dashboard.PendingGoals)
 
 	if err != nil {
-		utils.SendError(
-			w,
-			http.StatusInternalServerError,
-			"Database error",
-		)
+		utils.SendError(w, http.StatusInternalServerError, err.Error())
 		return
 	}
 
+	// Total Study Minutes
 	err = database.DB.QueryRow(
-		`SELECT COUNT(*)
+		`SELECT COALESCE(SUM(duration),0)
 		FROM study_sessions
 		JOIN subjects
 		ON study_sessions.subject_id = subjects.id
@@ -123,32 +112,25 @@ func GetDashboard(w http.ResponseWriter, r *http.Request) {
 	).Scan(&dashboard.TotalStudyMinutes)
 
 	if err != nil {
-		utils.SendError(
-			w,
-			http.StatusInternalServerError,
-			"Database error",
-		)
+		utils.SendError(w, http.StatusInternalServerError, err.Error())
 		return
 	}
 
+	// Today's Study Minutes
 	err = database.DB.QueryRow(
 		`SELECT COALESCE(SUM(duration),0)
 		FROM study_sessions
 		JOIN subjects
-		ON study_session.subjects_id = subjects.id
+		ON study_sessions.subject_id = subjects.id
 		JOIN courses
 		ON subjects.course_id = courses.id
-		WHERE courses.user_id = ? 
+		WHERE courses.user_id = ?
 		AND DATE(start_time) = CURDATE()`,
 		userID,
 	).Scan(&dashboard.TodayStudyMinutes)
 
 	if err != nil {
-		utils.SendError(
-			w,
-			http.StatusInternalServerError,
-			"Database error",
-		)
+		utils.SendError(w, http.StatusInternalServerError, err.Error())
 		return
 	}
 

@@ -37,7 +37,7 @@ func CreateStudyGoal(w http.ResponseWriter, r *http.Request) {
 		utils.SendError(
 			w,
 			http.StatusBadRequest,
-			"Invalid request body",
+			err.Error(),
 		)
 		return
 	}

@@ -42,21 +42,6 @@ definitions:
       target_minutes:
         type: integer
     type: object
-  models.StudySession:
-    properties:
-      created_at:
-        type: string
-      duration:
-        type: integer
-      end_time:
-        type: string
-      id:
-        type: integer
-      start_time:
-        type: string
-      subject_id:
-        type: integer
-    type: object
   models.Subject:
     properties:
       course_id:
@@ -348,65 +333,6 @@ paths:
       summary: Create study goal
       tags:
       - Study Goals
-  /study-session:
-    post:
-      consumes:
-      - application/json
-      description: Create a new study session
-      parameters:
-      - description: Study Session
-        in: body
-        name: session
-        required: true
-        schema:
-          $ref: '#/definitions/models.StudySession'
-      produces:
-      - application/json
-      responses:
-        "201":
-          description: Created
-          schema:
-            $ref: '#/definitions/utils.Response'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/utils.Response'
-        "401":
-          description: Unauthorized
-          schema:
-            $ref: '#/definitions/utils.Response'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/utils.Response'
-      summary: Create study session
-      tags:
-      - Study Sessions
-  /study-sessions:
-    get:
-      consumes:
-      - application/json
-      description: Get all study sessions
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/utils.Response'
-        "401":
-          description: Unauthorized
-          schema:
-            $ref: '#/definitions/utils.Response'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/utils.Response'
-      security:
-      - BearerAuth: []
-      summary: Get study sessions
-      tags:
-      - Study Sessions
   /subjects/{id}/goals:
     get:
       consumes:
@@ -438,6 +364,76 @@ paths:
       summary: Get study goals
       tags:
       - Study Goals
+  /subjects/{id}/study-session:
+    post:
+      consumes:
+      - application/json
+      description: Start a study session for a subject
+      parameters:
+      - description: Subject ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/utils.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/utils.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.Response'
+      security:
+      - BearerAuth: []
+      summary: Start a new study session
+      tags:
+      - Study Sessions
+  /subjects/{id}/study-sessions:
+    get:
+      consumes:
+      - application/json
+      description: Get all study sessions of a subject
+      parameters:
+      - description: Subject ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/utils.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/utils.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.Response'
+      security:
+      - BearerAuth: []
+      summary: Get study sessions
+      tags:
+      - Study Sessions
 securityDefinitions:
   BearerAuth:
     in: header

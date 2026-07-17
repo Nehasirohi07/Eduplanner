@@ -22,7 +22,7 @@ func InitDB() {
 
 	dsn := fmt.Sprintf(
 
-		"%s:%s@tcp(%s:%s)/%s",
+		"%s:%s@tcp(%s:%s)/%s?parseTime=true",
 
 		dbUser,
 		dbPassword,

@@ -56,5 +56,20 @@ func RegisterRoutes() *mux.Router {
 		middleware.Auth(http.HandlerFunc(handlers.GetCourses)),
 	).Methods("GET")
 
+	router.Handle(
+		"/subjects/{id}/study-session",
+		middleware.Auth(http.HandlerFunc(handlers.StartStudySession)),
+	).Methods("POST")
+
+	router.Handle(
+		"/subjects/{id}/study-session",
+		middleware.Auth(http.HandlerFunc(handlers.EndStudySession)),
+	).Methods("PUT")
+
+	router.Handle(
+		"/subjects/{id}/study-sessions",
+		middleware.Auth(http.HandlerFunc(handlers.GetStudySession)),
+	).Methods("GET")
+
 	return router
 }

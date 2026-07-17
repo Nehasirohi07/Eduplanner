@@ -12,18 +12,19 @@ import (
 	"github.com/gorilla/mux"
 )
 
-// CreateStudySession godoc
-// @Summary Create study session
-// @Description Create a new study session
+// StartStudySession godoc
+// @Summary Start a new study session
+// @Description Start a study session for a subject
 // @Tags Study Sessions
 // @Accept json
 // @Produce json
-// @Param session body models.StudySession true "Study Session"
+// @Security BearerAuth
+// @Param id path int true "Subject ID"
 // @Success 201 {object} utils.Response
 // @Failure 400 {object} utils.Response
 // @Failure 401 {object} utils.Response
 // @Failure 500 {object} utils.Response
-// @Router /study-session [post]
+// @Router /subjects/{id}/study-session [post]
 
 func StartStudySession(w http.ResponseWriter, r *http.Request) {
 
@@ -115,17 +116,19 @@ func StartStudySession(w http.ResponseWriter, r *http.Request) {
 	_, err = database.DB.Exec(
 		`INSERT INTO study_sessions(
 		subject_id,
-		start_time
-		)
-		VALUES(?, NOW())`,
+		start_time,
+		duration
+	)
+	VALUES (?, NOW(), ?)`,
 		subjectIDInt,
+		0,
 	)
 
 	if err != nil {
 		utils.SendError(
 			w,
 			http.StatusInternalServerError,
-			"Failed to start study Session",
+			err.Error(),
 		)
 		return
 	}
@@ -139,17 +142,19 @@ func StartStudySession(w http.ResponseWriter, r *http.Request) {
 
 }
 
-// GetStudySession godoc
-// @Summary Get study sessions
-// @Description Get all study sessions
+// StartStudySession godoc
+// @Summary Start a new study session
+// @Description Start a study session for a subject
 // @Tags Study Sessions
 // @Accept json
 // @Produce json
 // @Security BearerAuth
-// @Success 200 {object} utils.Response
+// @Param id path int true "Subject ID"
+// @Success 201 {object} utils.Response
+// @Failure 400 {object} utils.Response
 // @Failure 401 {object} utils.Response
 // @Failure 500 {object} utils.Response
-// @Router /study-sessions [get]
+// @Router /subjects/{id}/study-session [post]
 
 func EndStudySession(w http.ResponseWriter, r *http.Request) {
 
@@ -270,6 +275,20 @@ func EndStudySession(w http.ResponseWriter, r *http.Request) {
 
 }
 
+// GetStudySession godoc
+// @Summary Get study sessions
+// @Description Get all study sessions of a subject
+// @Tags Study Sessions
+// @Accept json
+// @Produce json
+// @Security BearerAuth
+// @Param id path int true "Subject ID"
+// @Success 200 {object} utils.Response
+// @Failure 400 {object} utils.Response
+// @Failure 401 {object} utils.Response
+// @Failure 500 {object} utils.Response
+// @Router /subjects/{id}/study-sessions [get]
+
 func GetStudySession(w http.ResponseWriter, r *http.Request) {
 
 	userID, ok := r.Context().Value("userID").(int)
@@ -299,8 +318,9 @@ func GetStudySession(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var subjectExists int
+
 	err = database.DB.QueryRow(
-		`SELECT subject.id
+		`SELECT subjects.id
 		FROM subjects
 		JOIN courses
 		ON subjects.course_id = courses.id
@@ -314,30 +334,29 @@ func GetStudySession(w http.ResponseWriter, r *http.Request) {
 		utils.SendError(
 			w,
 			http.StatusForbidden,
-			"subject not found or access denied",
+			"Subject not found or access denied",
 		)
 		return
 	}
+
 	if err != nil {
 		utils.SendError(
 			w,
 			http.StatusInternalServerError,
-			"Database error",
+			err.Error(), // debugging
 		)
 		return
 	}
 
-	var studySessions []models.StudySession
-
 	rows, err := database.DB.Query(
 		`SELECT
-		id,
-		subject_id,
-		start_time,
-		end_time,
-		duration,
-		created_at
-		FROM study_session
+			id,
+			subject_id,
+			start_time,
+			end_time,
+			duration,
+			created_at
+		FROM study_sessions
 		WHERE subject_id = ?`,
 		subjectIDInt,
 	)
@@ -346,12 +365,14 @@ func GetStudySession(w http.ResponseWriter, r *http.Request) {
 		utils.SendError(
 			w,
 			http.StatusInternalServerError,
-			"Database error",
+			err.Error(), // debugging
 		)
 		return
 	}
 
 	defer rows.Close()
+
+	var studySessions []models.StudySession
 
 	for rows.Next() {
 
@@ -370,22 +391,21 @@ func GetStudySession(w http.ResponseWriter, r *http.Request) {
 			utils.SendError(
 				w,
 				http.StatusInternalServerError,
-				"Database error",
+				err.Error(), // debugging
 			)
 			return
 		}
 
 		studySessions = append(studySessions, studySession)
+	}
 
-		if err = rows.Err(); err != nil {
-			utils.SendError(
-				w,
-				http.StatusInternalServerError,
-				"Database error",
-			)
-			return
-		}
-
+	if err = rows.Err(); err != nil {
+		utils.SendError(
+			w,
+			http.StatusInternalServerError,
+			err.Error(),
+		)
+		return
 	}
 
 	utils.SendSuccess(
@@ -394,5 +414,4 @@ func GetStudySession(w http.ResponseWriter, r *http.Request) {
 		"Study sessions fetched successfully",
 		studySessions,
 	)
-
 }
