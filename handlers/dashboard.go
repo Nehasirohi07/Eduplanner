@@ -8,6 +8,18 @@ import (
 	"eduplanner/utils"
 )
 
+// GetDashboard godoc
+// @Summary Get dashboard
+// @Description Get dashboard statistics for the logged-in user
+// @Tags Dashboard
+// @Accept json
+// @Produce json
+// @Security BearerAuth
+// @Success 200 {object} utils.Response
+// @Failure 401 {object} utils.Response
+// @Failure 500 {object} utils.Response
+// @Router /dashboard [get]
+
 func GetDashboard(w http.ResponseWriter, r *http.Request) {
 
 	userID, ok := r.Context().Value("userID").(int)
