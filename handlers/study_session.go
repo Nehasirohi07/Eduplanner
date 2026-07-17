@@ -142,19 +142,19 @@ func StartStudySession(w http.ResponseWriter, r *http.Request) {
 
 }
 
-// StartStudySession godoc
-// @Summary Start a new study session
-// @Description Start a study session for a subject
+// EndStudySession godoc
+// @Summary End study session
+// @Description End the active study session of a subject
 // @Tags Study Sessions
 // @Accept json
 // @Produce json
 // @Security BearerAuth
 // @Param id path int true "Subject ID"
-// @Success 201 {object} utils.Response
+// @Success 200 {object} utils.Response
 // @Failure 400 {object} utils.Response
 // @Failure 401 {object} utils.Response
 // @Failure 500 {object} utils.Response
-// @Router /subjects/{id}/study-session [post]
+// @Router /subjects/{id}/study-session [put]
 
 func EndStudySession(w http.ResponseWriter, r *http.Request) {
 
