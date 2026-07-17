@@ -51,5 +51,10 @@ func RegisterRoutes() *mux.Router {
 		httpSwagger.WrapHandler,
 	)
 
+	router.Handle(
+		"/courses",
+		middleware.Auth(http.HandlerFunc(handlers.GetCourses)),
+	).Methods("GET")
+
 	return router
 }

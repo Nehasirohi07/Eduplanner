@@ -10,11 +10,15 @@ import (
 	"eduplanner/routes"
 )
 
-//@title eduPlanner API
-//@version 1.0
-//@description Backend API for EduPlanner
-//@host localhost:5050
-//@BasePath /
+// @title eduPlanner API
+// @version 1.0
+// @description Backend API for EduPlanner
+// @host localhost:5050
+// @BasePath /
+
+// @securityDefinitions.apikey BearerAuth
+// @in header
+// @name Authorization
 
 func main() {
 	config.LoadEnv()

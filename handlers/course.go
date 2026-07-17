@@ -9,6 +9,20 @@ import (
 	"eduplanner/utils"
 )
 
+// CreateCourse godoc
+// @Summary Create a new course
+// @Description Create a course for the logged-in user
+// @Tags Courses
+// @Accept json
+// @Produce json
+// @Security BearerAuth
+// @Param course body models.Course true "Course details"
+// @Success 201 {object} utils.Response
+// @Failure 400 {object} utils.Response
+// @Failure 401 {object} utils.Response
+// @Failure 500 {object} utils.Response
+// @Router /courses [post]
+
 func CreateCourse(w http.ResponseWriter, r *http.Request) {
 
 	var course models.Course
@@ -60,6 +74,17 @@ func CreateCourse(w http.ResponseWriter, r *http.Request) {
 	)
 
 }
+
+// GetCourses godoc
+// @Summary Get all courses
+// @Description returns all courses of the logged-in user
+// @Tags courses
+// @Produce json
+// @Security BearerAuth
+// @Success 200 {object} utils.Response
+// @Failure 401 {object} utils.Response
+// @Failure 500 {object} utils.Response
+// @Router /courses [get]
 
 func GetCourses(w http.ResponseWriter, r *http.Request) {
 
