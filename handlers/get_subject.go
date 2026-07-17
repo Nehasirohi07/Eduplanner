@@ -47,18 +47,28 @@ func GetSubjects(w http.ResponseWriter, r *http.Request) {
 		)
 		return
 	}
+	var courseExists int
 
-	_, err = database.DB.Query(
-		"SELECT id FROM courses WHERE ID = ? AND user_id = ?",
+	err = database.DB.QueryRow(
+		"SELECT id FROM courses WHERE id=? AND user_id=?",
 		courseIDInt,
 		userID,
-	)
+	).Scan(&courseExists)
 
 	if err == sql.ErrNoRows {
 		utils.SendError(
 			w,
 			http.StatusForbidden,
 			"Course not found or access denied",
+		)
+		return
+	}
+
+	if err != nil {
+		utils.SendError(
+			w,
+			http.StatusInternalServerError,
+			"Database error",
 		)
 		return
 	}

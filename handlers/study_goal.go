@@ -181,7 +181,7 @@ func GetStudyGoals(w http.ResponseWriter, r *http.Request) {
 	var subjectExists int
 
 	err = database.DB.QueryRow(
-		`SELECT subject.id
+		`SELECT subjects.id
 		FROM subjects
 		JOIN courses
 		ON subjects.course_id = courses.id
@@ -216,7 +216,7 @@ func GetStudyGoals(w http.ResponseWriter, r *http.Request) {
 		target_minutes,
 		deadline,
 		status,
-		created_id
+		created_At
 		FROM study_goals
 		WHERE subject_id = ?`,
 		subjectIDInt,
