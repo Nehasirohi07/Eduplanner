@@ -12,6 +12,19 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
+// Register godoc
+//	@Summary		Register a new user
+//	@Description	Register a new user with name , email and password
+//	@Tags			Authentication
+//	@Accept			json
+//	@Produce		json
+//	@Param			user	body		models.RegisterRequest	true	"Register user"
+//	@Success		201		{object}	utils.Response
+//	@Failure		400		{object}	utils.Response
+//	@Failure		409		{object}	utils.Response
+//	@Failure		500		{object}	utils.Response
+//	@Router			/register [post]
+
 func Register(w http.ResponseWriter, r *http.Request) {
 
 	var user models.User
@@ -80,6 +93,19 @@ func Register(w http.ResponseWriter, r *http.Request) {
 	)
 
 }
+
+// Login godoc
+//	@Summary		Login user
+//	@Description	Login using email and password
+//	@Tags			Authentication
+//	@Accept			json
+//	@Produce		json
+//	@Param			credentials	body		models.LoginRequest	true	"Login Credentials"
+//	@Success		200			{object}	utils.Response
+//	@Failure		400			{object}	utils.Response
+//	@Failure		401			{object}	utils.Response
+//	@Failure		500			{object}	utils.Response
+//	@Router			/login [post]
 
 func Login(w http.ResponseWriter, r *http.Request) {
 
