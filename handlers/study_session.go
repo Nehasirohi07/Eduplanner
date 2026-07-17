@@ -12,6 +12,19 @@ import (
 	"github.com/gorilla/mux"
 )
 
+// CreateStudySession godoc
+// @Summary Create study session
+// @Description Create a new study session
+// @Tags Study Sessions
+// @Accept json
+// @Produce json
+// @Param session body models.StudySession true "Study Session"
+// @Success 201 {object} utils.Response
+// @Failure 400 {object} utils.Response
+// @Failure 401 {object} utils.Response
+// @Failure 500 {object} utils.Response
+// @Router /study-session [post]
+
 func StartStudySession(w http.ResponseWriter, r *http.Request) {
 
 	userID, ok := r.Context().Value("userID").(int)
@@ -125,6 +138,18 @@ func StartStudySession(w http.ResponseWriter, r *http.Request) {
 	)
 
 }
+
+// GetStudySession godoc
+// @Summary Get study sessions
+// @Description Get all study sessions
+// @Tags Study Sessions
+// @Accept json
+// @Produce json
+// @Security BearerAuth
+// @Success 200 {object} utils.Response
+// @Failure 401 {object} utils.Response
+// @Failure 500 {object} utils.Response
+// @Router /study-sessions [get]
 
 func EndStudySession(w http.ResponseWriter, r *http.Request) {
 
