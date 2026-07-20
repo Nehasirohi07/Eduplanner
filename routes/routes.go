@@ -79,7 +79,17 @@ func RegisterRoutes() *mux.Router {
 	router.Handle(
 		"/courses/{id}",
 		middleware.Auth(http.HandlerFunc(handlers.DeleteCourse)),
-	)
+	).Methods("DELETE")
+
+	router.Handle(
+		"/subjects/{id}",
+		middleware.Auth(http.HandlerFunc(handlers.DeleteSubject)),
+	).Methods("DELETE")
+
+	router.Handle(
+		"/subjects/{id}",
+		middleware.Auth(http.HandlerFunc(handlers.UpdateSubject)),
+	).Methods("PUT")
 
 	return router
 }

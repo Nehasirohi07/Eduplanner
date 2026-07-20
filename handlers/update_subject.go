@@ -29,7 +29,7 @@ import (
 // @Failure 500 {object} utils.Response
 // @Router /subjects/{id} [put]
 
-func DeleteSubject(w http.ResponseWriter, r *http.Request) {
+func UpdateSubject(w http.ResponseWriter, r *http.Request) {
 
 	userID, ok := r.Context().Value("userID").(int)
 
