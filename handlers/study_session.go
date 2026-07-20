@@ -257,7 +257,6 @@ func EndStudySession(w http.ResponseWriter, r *http.Request) {
 		duration,
 		sessionID,
 	)
-
 	if err != nil {
 		utils.SendError(
 			w,
@@ -266,6 +265,56 @@ func EndStudySession(w http.ResponseWriter, r *http.Request) {
 		)
 		return
 	}
+
+	var totalMinutes int
+
+	err = database.DB.QueryRow(
+		`SELECT COALESCE(SUM(duration), 0)
+		FROM study_sessions
+		WHERE subject_id = ?`,
+		subjectIDInt,
+	).Scan(&totalMinutes)
+
+	if err != nil {
+		utils.SendError(
+			w,
+			http.StatusInternalServerError,
+			"Database error",
+		)
+		return
+	}
+
+	var goalID int
+	var targetMinutes int
+
+	err = database.DB.QueryRow(
+		`SELECT id, target_minutes
+	FROM study_goals
+	WHERE subject_id = ?
+	ORDER BY created_at DESC
+	LIMIT 1`,
+		subjectIDInt,
+	).Scan(&goalID, &targetMinutes)
+
+	if err == sql.ErrNoRows {
+		utils.SendSuccess(
+			w,
+			http.StatusOK,
+			"Study session ended successfully",
+			nil,
+		)
+		return
+	}
+
+	if err != nil {
+		utils.SendError(
+			w,
+			http.StatusInternalServerError,
+			"Database error",
+		)
+		return
+	}
+
 	utils.SendSuccess(
 		w,
 		http.StatusOK,
